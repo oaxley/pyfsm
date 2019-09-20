@@ -1,0 +1,108 @@
+
+# -*- coding: utf-8 -*-
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# version for the builder
+Version: 1.0.0
+
+# define events
+Events:
+  - E.OFF
+  - E.ON
+  - E.SWAP
+  - E.READY
+  - E.+INT
+  - E.-INT
+  - E.+DEC
+  - E.-DEC
+
+# define states
+# If the type is not specified, NORMAL is automatically assigned.
+# enter / exit actions are set to blank if not specified.
+# Valid keys for a state:
+# -name: name of the state
+# -type: BEGIN/NORMAL/END
+# -enter: action when entering the state
+# -exit: action when leaving the state
+States:
+  - name: S.OFF
+    type: BEGIN
+    enter: "off"
+    exit: ""
+  - name: S.ON
+    enter: "on"
+  - name: S.READY
+    enter: ready
+  - name: S.SWAP
+    enter: swap
+  - name: S.+INT
+    enter: "+int"
+  - name: S.-INT
+    enter: "-int"
+  - name: S.+DEC
+    enter: "+dec"
+  - name: S.-DEC
+    enter: "-dec"
+
+# define the transitions
+# valid keys for a transition:
+# event: the event that will triggered the transition
+# begin: the begin state for this transition
+# end: the end state for this transition
+Transitions:
+  - event: E.ON
+    begin: S.OFF
+    end: S.ON
+  - event: E.READY
+    begin: S.ON
+    end: S.READY
+  - event: E.OFF
+    begin: S.READY
+    end: S.OFF
+
+  - event: E.SWAP
+    begin: S.READY
+    end: S.SWAP
+  - event: E.READY
+    begin: S.SWAP
+    end: S.READY
+
+  - event: E.+INT
+    begin: S.READY
+    end: S.+INT
+  - event: E.READY
+    begin: S.+INT
+    end: S.READY
+
+  - event: E.-INT
+    begin: S.READY
+    end: S.-INT
+  - event: E.READY
+    begin: S.-INT
+    end: S.READY
+
+  - event: E.+DEC
+    begin: S.READY
+    end: S.+DEC
+  - event: E.READY
+    begin: S.+DEC
+    end: S.READY
+
+  - event: E.-DEC
+    begin: S.READY
+    end: S.-DEC
+  - event: E.READY
+    begin: S.-DEC
+    end: S.READY
